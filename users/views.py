@@ -18,10 +18,10 @@ class Register(APIView):
 
 class LoginView(APIView):
     def post(self, request):
-        schoolID = request.data["schoolID"]
+        username = request.data["username"]
         password = request.data["password"]
 
-        user = User.objects.filter(schoolID=schoolID).first()
+        user = User.objects.filter(username=username).first()
 
         if user is None:
             raise AuthenticationFailed("User not found!")
@@ -38,7 +38,7 @@ class LoginView(APIView):
         token = jwt.encode(payload, "secret", algorithm="HS256")
 
         response = Response()
-        response.set_cookie(key="jwt", value=token, httponly=True)
+        response.set_cookie(key="jwt", value=token)
         response.data = {"jwt": token}
 
         return response
