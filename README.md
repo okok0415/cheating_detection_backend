@@ -4,7 +4,7 @@
 
 3. venv/Scripts/activate (cmd), venv/Scripts/Activate.ps1(powershell) (가상환경 들어가기 프로젝트 실행할 때 마다 실행해야됨)
 
-4. pip install requirements.txt
+4. pip install -r requirements.txt
 
 5. python manage.py runserver - 서버 실행
 
