@@ -6,7 +6,11 @@
 
 4. pip install -r requirements.txt
 
-5. python manage.py runserver - 서버 실행
+5. https://drive.google.com/file/d/1bTyrowPFUbGzzs3ZrfEglp1wfMs1JnJx/view?usp=sharing
+링크 따라 들어가서 .deepface, Tesseract-OCR, cvdata 다운로드 후 cheating_detection_backend 파일안에 넣어준다.
 
-6. POSTMAN 사용하면 frontend없이 데이터 보내는 것 가능
+6. python manage.py runserver - 서버 실행
 
+7. POSTMAN 사용하면 frontend없이 데이터 보내는 것 가능
+
+https://drive.google.com/file/d/1bTyrowPFUbGzzs3ZrfEglp1wfMs1JnJx/view?usp=sharing
