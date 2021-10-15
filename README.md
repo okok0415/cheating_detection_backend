@@ -12,5 +12,3 @@
 6. python manage.py runserver - 서버 실행
 
 7. POSTMAN 사용하면 frontend없이 데이터 보내는 것 가능
-
-https://drive.google.com/file/d/1bTyrowPFUbGzzs3ZrfEglp1wfMs1JnJx/view?usp=sharing

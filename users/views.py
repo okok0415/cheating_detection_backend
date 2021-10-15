@@ -8,7 +8,6 @@ from .models import User
 from .serializers import UserSerializer
 
 
-
 class Register(APIView):
     def post(self, request):
         serializer = UserSerializer(data=request.data)
@@ -39,7 +38,7 @@ class LoginView(APIView):
         token = jwt.encode(payload, "secret", algorithm="HS256")
 
         response = Response()
-        response.set_cookie(key="jwt", value=token)
+        response.set_cookie(key="jwt", value=token, samesite=None)
         response.data = {"jwt": token}
 
         return response
