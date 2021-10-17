@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-
+import base64, cv2
+import numpy as np
 import asyncio
 
 
@@ -83,3 +84,59 @@ class ChatConsumer(AsyncWebsocketConsumer):
                 }
             )
         )
+"""
+class TrainConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+        print("connect!")
+    
+    async def disconnect(self, code):
+        print("disconnect!")
+
+    async def receive(self, text_data):
+        receive_dict = json.loads(text_data)
+        img = cv2.imdecode(np.fromstring(base64.b64decode(text_data.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        cv2.imshow('image', img)
+        cv2.waitKey(1)
+"""
+class TrainConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+
+        self.room_group_name = "Test-Room"
+
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+        print("Disconnected!")
+
+    # Receive message from WebSocket
+    async def receive(self, text_data):
+        json_data=json.loads(text_data)
+        msg = json_data['image']
+        print(json_data)
+        img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        cv2.imshow('image', img)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
+
+        """
+        receive_dict = json.loads(text_data)
+        top = receive_dict["top"]
+        x = receive_dict["x"]
+        frame = receive_dict["frame"]
+        print(top)
+        print(x)
+        print(frame)
+        """
+        #msg = text_data
+        #img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        #cv2.imshow('image', img)
+        #cv2.waitKey(1)
+        # print('unanswered_offers: ', self.unanswered_offers)
+
+
+
