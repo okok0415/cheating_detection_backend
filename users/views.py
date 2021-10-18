@@ -38,7 +38,7 @@ class LoginView(APIView):
         token = jwt.encode(payload, "secret", algorithm="HS256")
 
         response = Response()
-        response.set_cookie(key="jwt", value=token, samesite=None)
+        response.set_cookie(key="jwt", value=token)
         response.data = {"jwt": token}
 
         return response
@@ -46,8 +46,8 @@ class LoginView(APIView):
 
 class UserView(APIView):
     def get(self, request):
-        token = request.COOKIES.get("jwt")
-
+        token = request.COOKIES.get('jwt')
+        print(token)
         if not token:
             raise AuthenticationFailed("Unauthenticated")
 

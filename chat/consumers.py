@@ -116,7 +116,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         json_data=json.loads(text_data)
-        msg = json_data['image']
+        msg = json_data['frame']
         print(json_data)
         img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         cv2.imshow('image', img)
