@@ -101,13 +101,13 @@ def initializeFolder():
 	
 	home = str(Path.home())
 	
-	if not os.path.exists(home+"/.deepface"):
-		os.mkdir(home+"/.deepface")
-		print("Directory ",home,"/.deepface created")
+	if not os.path.exists("/.deepface"):
+		os.mkdir("/.deepface")
+		print("Directory /.deepface created")
 	
-	if not os.path.exists(home+"/.deepface/weights"):
-		os.mkdir(home+"/.deepface/weights")
-		print("Directory ",home,"/.deepface/weights created")
+	if not os.path.exists("/.deepface/weights"):
+		os.mkdir("/.deepface/weights")
+		print("Directory "+"/.deepface/weights created")
 
 def loadBase64Img(uri):
    encoded_data = uri.split(',')[1]
@@ -115,35 +115,8 @@ def loadBase64Img(uri):
    img = cv2.imdecode(nparr, cv2.IMREAD_COLOR)
    return img
 
-def get_opencv_path():
-	opencv_home = cv2.__file__
-	folders = opencv_home.split(os.path.sep)[0:-1]
-	
-	path = folders[0]
-	for folder in folders[1:]:
-		path = path + "/" + folder
-	
-	return path+"/data/"
-
 def load_image(img,info=False):
 	num_img=img.copy()
-	"""exact_image = False
-	if type(img).__module__ == np.__name__:
-		exact_image = True
-	
-	base64_img = False
-	if len(img) > 11 and str(img[0:11]) == "data:image/":
-		base64_img = True
-	
-	#---------------------------
-	
-	if base64_img == True:
-		img = loadBase64Img(img)
-		
-	if exact_image != True: #image path passed as input
-		if os.path.isfile(img) != True:
-			raise ValueError("Confirm that ",img," exists")
-		"""
 	num_img = np.array(num_img)
 
 	#---------------------------
