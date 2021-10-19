@@ -81,7 +81,17 @@ WSGI_APPLICATION = "config.wsgi.application"
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
 
-DATABASES = {"default": {"ENGINE": "djongo", "NAME": "test"}}
+DATABASES = {
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": "django",
+        'CLIENT' : {
+            "username" : 'team1',
+            'password' : 'whfvmghkdlxld',
+            'host' : '3.35.149.208',
+            'port' : 11210
+        }
+    }}
 """
 DATABASES = {
     "default": {
