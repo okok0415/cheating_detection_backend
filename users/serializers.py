@@ -6,9 +6,9 @@ from .models import User
 class UserSerializer(serializers.ModelSerializer):
     class Meta:
         model = User
-        fields = ("username", "name", "birth", "password", "image","face_embedding")
+        fields = ("username","password", "image","face_embedding")
         extra_kwargs = {"password": {"write_only": True}}
-
+    """"""
     def create(self, validated_data):
         password = validated_data.pop("password", None)
         instance = self.Meta.model(**validated_data)

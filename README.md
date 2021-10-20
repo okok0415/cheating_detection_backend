@@ -15,4 +15,4 @@
 
 8. python manage.py runserver - 서버 실행
 
-9. 현재 mongoDB의 localhost:27017에 연결하는 형태이다. mongoDB가 없다면 config/settings.py/ DATABASE를 default로 바꾼다. (기존 데이터 베이스 밑에 주석처리 해놓음)
+9. 현재 mongoDB의 개인 DB포트에 연결하는 형태이다. mongoDB가 없다면 config/settings.py/ DATABASE를 default로 바꾼다. (기존 데이터 베이스 밑에 주석처리 해놓음)
