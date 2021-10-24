@@ -34,7 +34,7 @@ class LoginView(APIView):
         #
         payload = {
             "id": user.id,
-            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=60),
+            "exp": datetime.datetime.utcnow() + datetime.timedelta(minutes=1000),
             "iat": datetime.datetime.utcnow(),
         }
 
@@ -87,5 +87,4 @@ class UpdateNameView(APIView):
     def post(self, request):
         username = request.data["username"]
         User.objects.filter(username = username).update(name= request.data["name"], birth= request.data['birth'])
-
-        return Response()
+        return Response({"message" : "ok"})
