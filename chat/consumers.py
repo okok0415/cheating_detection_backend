@@ -3,6 +3,7 @@ from channels.generic.websocket import AsyncWebsocketConsumer
 import base64, cv2
 import numpy as np
 import asyncio
+import os
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -139,7 +140,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
 
 
 
-class CalibrateConsumer(AsyncWebsocketConsumer):
+class AuthenticationConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
         self.room_group_name = "Test-Room"
@@ -159,4 +160,5 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
         msg = text_data
         img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         cv2.imshow('image', img)
-        cv2.waitKey(1)
+        cv2.waitKey(0)
+        cv2.destroyAllWindows()
