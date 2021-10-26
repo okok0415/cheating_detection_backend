@@ -157,7 +157,10 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        msg = text_data
+        json_data=json.loads(text_data)
+        print(json_data)
+        msg = json_data['frame']
+        print(json_data["username"])
         img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         cv2.imshow('image', img)
         cv2.waitKey(0)
