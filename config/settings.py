@@ -43,6 +43,8 @@ INSTALLED_APPS = [
     "corsheaders",
     "chat",
     "users.apps.UsersConfig",
+    "authentication.facenet",
+    "authentication.liveness",
 ]
 
 MIDDLEWARE = [
@@ -80,9 +82,25 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-
-DATABASES = {"default": {"ENGINE": "djongo", "NAME": "test"}}
-
+"""
+DATABASES = {
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": "django",
+        'CLIENT' : {
+            "username" : 'team1',
+            'password' : 'whfvmghkdlxld',
+            'host' : '3.35.149.208',
+            'port' : 11210
+        }
+    }}
+"""
+DATABASES = {
+    "default": {
+        "ENGINE": "djongo",
+        "NAME": "django",
+    }
+}
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -141,6 +159,10 @@ AUTH_USER_MODEL = "users.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-# CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:3000/", "http://localhost:3000"]
-CORS_ORIGIN_ALLOW_ALL = True
+CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:3000", "http://localhost:3000"]
+#CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
+
+SESSION_COOKIE_SAMESITE = 'None'
+SESSION_COOKIE_SECURE = False
+
