@@ -12,6 +12,7 @@ class User(AbstractUser):
     password = models.CharField(max_length=255)
     image = models.ImageField(blank=True, upload_to="photo/%Y/%m/%d", default="example.jpg")
     face_embedding = models.BinaryField(blank=True)
+    supervisor = models.CharField(max_length=10, default="false")
 
     def save(self, *args, **kwargs):
         self.info_extraction()
