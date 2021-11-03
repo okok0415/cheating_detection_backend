@@ -8,7 +8,7 @@ from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
 import jwt, datetime
 from .models import User
-from .serializers import PasswordSerializer, UserSerializer
+from .serializers import UserSerializer
 
 
 class Register(APIView):
