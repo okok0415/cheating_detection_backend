@@ -58,7 +58,7 @@ def initialize_input(img1_path, img2_path = None):
 
 def initialize_detector():
 
-    eye_detector_path = "face_detector/haarcascade_eye.xml"
+    eye_detector_path = "./authentication/face_detector/haarcascade_eye.xml"
 
     if os.path.isfile(eye_detector_path) != True:
         raise ValueError("Confirm that opencv is installed on your environment! Expected path ", eye_detector_path,
@@ -74,8 +74,8 @@ def initialize_detector():
     #------------------------------
     #face detectors
     face_detector = cv2.dnn.readNetFromCaffe(
-        "face_detector/deploy.prototxt",
-        "face_detector/res10_300x300_ssd_iter_140000.caffemodel"
+        "./authentication/face_detector/deploy.prototxt",
+        "./authentication/face_detector/res10_300x300_ssd_iter_140000.caffemodel"
     )
 
 def loadBase64Img(uri):

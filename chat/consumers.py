@@ -6,7 +6,11 @@ import numpy as np
 import asyncio
 import os
 from authentication.face_authentication import authentication
-#from users.models import User
+from users.models import User
+
+from asgiref.sync import sync_to_async
+
+
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -144,6 +148,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
 
 
 class AuthenticationConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
 
         self.room_group_name = "Test-Room"
@@ -158,18 +163,30 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 
         print("Disconnected!")
 
+
     # Receive message from WebSocket
-    async def receive(self, text_data):
+    @sync_to_async
+    def receive(self, text_data):
         json_data=json.loads(text_data)
-        print(json_data)
-        msg = json_data['frame']
-        #embedding = User.objects.filter(id=json_data["id"]).only("face_embedding")
+
         ID = json_data["username"] 
+        
+        embedding_bytes = User.objects.filter(username=ID).values_list("face_embedding",flat=True)[0]
+        embedding = np.frombuffer(embedding_bytes, dtype='float32')
+                
+        msg = json_data['frame']
         img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-        result = authentication(img,ID)
+
+        result = authentication(img,embedding)
         print(result)
-        """
-        cv2.imshow('image', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
-        """
+
+        self.channel_layer.group_send(
+            self.room_group_name,{"type": "send.result","result" : result}
+            )
+
+    async def send_result(self, event):
+        result = event["message"]
+
+        await self.send(text_data=json.dumps({"result": result}))
+
+        

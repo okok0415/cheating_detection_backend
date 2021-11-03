@@ -7,13 +7,14 @@ from .detect_align import detect_face, preprocess_face
 #from connect_db import load_info
 from .verification import verify
 from users.models import User
+from asgiref.sync import sync_to_async
 
 
 
 
-def authentication(image,ID,confidence=0.5):
+def authentication(image,embedding,confidence=0.5):
 
-    embedding = User.objects.filter(username=ID).only("face_embedding")
+    
     face = detect_face(image, confidence)
 
     face_to_recog = face

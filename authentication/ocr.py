@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 def ocr(image):
-    pyt.pytesseract.tesseract_cmd = r'Tesseract-OCR\tesseract'
+    pyt.pytesseract.tesseract_cmd = r'.\authentication\Tesseract-OCR\tesseract'
     config_name = ('-l kor --oem 3 --psm 12')
     config_birth = ('-l kor --oem 3 --psm 12 -c tessedit_char_whitelist=0123456789')
 
