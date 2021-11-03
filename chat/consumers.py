@@ -1,6 +1,7 @@
 import json
 from channels.generic.websocket import AsyncWebsocketConsumer
-import base64, cv2
+import base64
+import cv2
 import numpy as np
 #import imutils
 import asyncio
@@ -8,8 +9,7 @@ import os
 from authentication.face_authentication import authentication
 from users.models import User
 
-from asgiref.sync import sync_to_async
-
+from asgiref.sync import sync_to_async, async_to_sync
 
 
 """
@@ -93,6 +93,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             )
         )
 """
+
+
 class ChatConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
@@ -106,16 +108,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        
+
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
         print('Disconnected!')
-        
 
     # Receive message from WebSocket
+
     async def receive(self, text_data):
         receive_dict = json.loads(text_data)
         peer_username = receive_dict['peer']
@@ -130,7 +132,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         #print('action: ', action)
         #print('self.channel_name: ', self.channel_name)
 
-        if(action == 'new-offer') or (action =='new-answer'):
+        if(action == 'new-offer') or (action == 'new-answer'):
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
 
@@ -153,21 +155,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if(action == "get-frame"):
             msg = receive_dict['frame']
-            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            img = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             #receiver_channel_name = receive_dict['message']['receiver_channel_name']
             await self.send(
-            text_data=json.dumps(
+                text_data=json.dumps(
                     {
                         'peer': peer_username,
                         'action': action,
                         'message': message,
-                        'x' : 27,
-                        'y' : 100
+                        'x': 27,
+                        'y': 100
                     }
                 )
             )
-            
-            return 
+
+            return
 
         # set new receiver as the current sender
         # so that some messages can be sent
@@ -195,6 +198,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
             'action': action,
             'message': message,
         }))
+
 
 class ScreenConsumer(AsyncWebsocketConsumer):
     async def connect(self):
@@ -209,16 +213,16 @@ class ScreenConsumer(AsyncWebsocketConsumer):
         await self.accept()
 
     async def disconnect(self, close_code):
-        
+
         await self.channel_layer.group_discard(
             self.room_group_name,
             self.channel_name
         )
 
         print('Disconnected!')
-        
 
     # Receive message from WebSocket
+
     async def receive(self, text_data):
         receive_dict = json.loads(text_data)
         peer_username = receive_dict['peer']
@@ -233,7 +237,7 @@ class ScreenConsumer(AsyncWebsocketConsumer):
         #print('action: ', action)
         #print('self.channel_name: ', self.channel_name)
 
-        if(action == 'new-offer') or (action =='new-answer'):
+        if(action == 'new-offer') or (action == 'new-answer'):
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
 
@@ -256,21 +260,22 @@ class ScreenConsumer(AsyncWebsocketConsumer):
 
         if(action == "get-frame"):
             msg = receive_dict['frame']
-            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            img = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             #receiver_channel_name = receive_dict['message']['receiver_channel_name']
             await self.send(
-            text_data=json.dumps(
+                text_data=json.dumps(
                     {
                         'peer': peer_username,
                         'action': action,
                         'message': message,
-                        'x' : 27,
-                        'y' : 100
+                        'x': 27,
+                        'y': 100
                     }
                 )
             )
-            
-            return 
+
+            return
 
         # set new receiver as the current sender
         # so that some messages can be sent
@@ -299,35 +304,6 @@ class ScreenConsumer(AsyncWebsocketConsumer):
             'message': message,
         }))
 
-class TestConsumer(AsyncWebsocketConsumer):
-    async def connect(self):
-
-        self.room_group_name = "Test-Room"
-
-        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
-
-        await self.accept()
-
-    async def disconnect(self, close_code):
-
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
-
-        print("Disconnected!")
-
-    # Receive message from WebSocket
-    async def receive(self, text_data):
-        
-        msg = text_data
-        img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-
-        await self.send(
-            text_data=json.dumps(
-                {
-                    "x": 100,
-                    "y": 100,
-                }
-            )
-        )
 
 """
 class TrainConsumer(AsyncWebsocketConsumer):
@@ -345,7 +321,6 @@ class TrainConsumer(AsyncWebsocketConsumer):
 """
 
 
-
 class TrainConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
@@ -363,15 +338,17 @@ class TrainConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        json_data=json.loads(text_data)
+        json_data = json.loads(text_data)
         if json_data['message'] == 'screen-size':
             print("a")
         elif json_data['message'] == 'only-frame':
             msg = json_data['frame']
-            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            img = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         elif json_data['message'] == 'clicked':
             msg = json_data['frame']
-            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            img = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             cv2.imshow('image', img)
             cv2.waitKey(0)
             cv2.destroyAllWindows()
@@ -387,9 +364,8 @@ class TrainConsumer(AsyncWebsocketConsumer):
         #msg = text_data
         #img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         #cv2.imshow('image', img)
-        #cv2.waitKey(1)
+        # cv2.waitKey(1)
         # print('unanswered_offers: ', self.unanswered_offers)
-
 
 
 class AuthenticationConsumer(AsyncWebsocketConsumer):
@@ -408,33 +384,54 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 
         print("Disconnected!")
 
-
     # Receive message from WebSocket
+
     @sync_to_async
     def receive(self, text_data):
-        json_data=json.loads(text_data)
+        json_data = json.loads(text_data)
 
+        ID = json_data["username"]
 
-        ID = json_data["username"] 
-        
-        embedding_bytes = User.objects.filter(username=ID).values_list("face_embedding",flat=True)[0]
+        embedding_bytes = User.objects.filter(
+            username=ID).values_list("face_embedding", flat=True)[0]
         embedding = np.frombuffer(embedding_bytes, dtype='float32')
-                
 
         msg = json_data['frame']
-        img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        img = cv2.imdecode(np.fromstring(base64.b64decode(
+            msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
 
-
-        result = authentication(img,embedding)
+        result = authentication(img, embedding)
         print(result)
 
-        self.channel_layer.group_send(
-            self.room_group_name,{"type": "send.result","result" : result}
+        async_to_sync(
+            self.send)(
+            text_data=json.dumps(
+                {
+                    'result': result
+                }
             )
+        )
 
-    async def send_result(self, event):
-        result = event["message"]
 
-        await self.send(text_data=json.dumps({"result": result}))
+class CalibrateConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
 
-        
+        self.room_group_name = "Test-Room"
+
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+        print("Disconnected!")
+
+    # Receive message from WebSocket
+    async def receive(self, text_data):
+        msg = text_data
+        img = cv2.imdecode(np.fromstring(base64.b64decode(
+            msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        cv2.imshow('image', img)
+        cv2.waitKey(1)

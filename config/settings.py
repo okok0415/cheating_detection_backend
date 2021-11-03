@@ -87,11 +87,11 @@ DATABASES = {
     "default": {
         "ENGINE": "djongo",
         "NAME": "django",
-        'CLIENT' : {
-            "username" : 'team1',
-            'password' : '',
-            'host' : '',
-            'port' : 
+        'CLIENT': {
+            "username": 'team1',
+            'password': 'whfvmghkdlxld',
+            'host': '13.124.104.191',
+            'port': 11210
         }
     }}
 """
@@ -166,4 +166,3 @@ CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = False
-
