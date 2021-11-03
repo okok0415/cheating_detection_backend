@@ -6,4 +6,5 @@ websocket_urlpatterns = [
     url(r"^ws/train/$", consumers.TrainConsumer),
     url(r"^ws/authentication/$", consumers.AuthenticationConsumer),
     url(r"^ws/test/$", consumers.TestConsumer),
+    url(r"^ws/screen/$", consumers.ScreenConsumer),
 ]
