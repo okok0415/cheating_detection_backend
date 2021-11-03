@@ -6,8 +6,7 @@
 
 4. pip install -r requirements.txt
 
-5. https://drive.google.com/file/d/1bTyrowPFUbGzzs3ZrfEglp1wfMs1JnJx/view?usp=sharing
-링크 따라 들어가서 .deepface, Tesseract-OCR, cvdata 다운로드 후 cheating_detection_backend 파일안에 넣어준다.
+5. https://drive.google.com/drive/folders/19mypcFLYxafz8EoJkTdxAOqwuBgO5Nxa?usp=sharing 에서 face_detector,models, Tesseract-OCR 다운로드 후 authentication 파일안에 넣어준다.
 
 6. python manage.py makemigrations
 

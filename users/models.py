@@ -2,7 +2,8 @@ from django.contrib.auth.models import AbstractUser
 from django.db import models
 from datetime import date
 from PIL import Image
-from .embedder import img_embedding, info_extractor
+
+from authentication.embedder import img_embedding, info_extractor
 
 
 class User(AbstractUser):

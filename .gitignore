@@ -6,6 +6,7 @@ __pycache__
 media/photo
 /media/photo
 
-.deepface
-cvdata
-Tesseract-OCR
+
+authentication/Tesseract-OCR
+authentication/face_detector
+authentication/models
