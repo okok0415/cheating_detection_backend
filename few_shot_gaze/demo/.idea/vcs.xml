@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="VcsDirectoryMappings">
+    <mapping directory="$PROJECT_DIR$/.." vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/HRNet-Facial-Landmark-Detection" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/cereal" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/eigen" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/eigen3-nnls" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/glm" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/mexplus" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/nanoflann" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/pybind11" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/pybind11/tools/clang" vcs="Git" />
+    <mapping directory="$PROJECT_DIR$/ext/eos/3rdparty/toml11" vcs="Git" />
+  </component>
+</project>

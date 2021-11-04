@@ -1,0 +1,7 @@
+__pycache__/
+src/output*
+*.pkl
+*.avi
+*_gaze_network.pth.tar
+mysite
+settings.py
