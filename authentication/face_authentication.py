@@ -14,11 +14,13 @@ from asgiref.sync import sync_to_async
 
 def authentication(image,embedding,confidence=0.5):
 
+    try:
+        face = detect_face(image, confidence)
+        face_to_recog = face
+        face = cv2.resize(face, (32, 32))
+    except:
+        return "Undetected"
     
-    face = detect_face(image, confidence)
-
-    face_to_recog = face
-    face = cv2.resize(face, (32, 32))
 
     face = face.astype('float') / 255.0
     face = np.array(face,dtype='float32')
