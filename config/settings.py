@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-1$tras29q0!5&h*okb8m%2j$dt!o$o8+p4*n^#2gb2_c6cctna
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*']
+ALLOWED_HOSTS = []
 
 
 # Application definition
@@ -42,7 +42,9 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "chat",
-    "users.apps.UsersConfig"
+    "users.apps.UsersConfig",
+    "authentication.facenet",
+    "authentication.liveness",
 ]
 
 MIDDLEWARE = [
@@ -80,16 +82,16 @@ WSGI_APPLICATION = "config.wsgi.application"
 
 # Database
 # https://docs.djangoproject.com/en/3.2/ref/settings/#databases
-"""
+
 DATABASES = {
     "default": {
         "ENGINE": "djongo",
         "NAME": "django",
-        'CLIENT' : {
-            "username" : 'team1',
-            'password' : 'whfvmghkdlxld',
-            'host' : '3.35.149.208',
-            'port' : 11210
+        'CLIENT': {
+            "username": 'team1',
+            'password': 'whfvmghkdlxld',
+            'host': '13.124.104.191',
+            'port': 11210
         }
     }}
 """
@@ -99,6 +101,7 @@ DATABASES = {
         "NAME": "django",
     }
 }
+"""
 
 # Password validation
 # https://docs.djangoproject.com/en/3.2/ref/settings/#auth-password-validators
@@ -163,4 +166,3 @@ CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = 'None'
 SESSION_COOKIE_SECURE = False
-

@@ -6,8 +6,9 @@ __pycache__
 media/photo
 /media/photo
 
-.deepface
-cvdata
-Tesseract-OCR
 venv2
 *gaze_network.pth.tar
+
+authentication/Tesseract-OCR
+authentication/face_detector
+authentication/models

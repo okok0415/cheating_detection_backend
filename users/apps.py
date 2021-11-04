@@ -21,6 +21,11 @@ lr = 1e-5
 steps = 5000
 cnt = 0
 
+from pathlib import Path
+
+from authentication.facenet import loadFacenet
+from authentication.liveness import *
+
 
 class UsersConfig(AppConfig):
     default_auto_field = 'django.db.models.BigAutoField'
@@ -39,6 +44,8 @@ class EyeConfig(AppConfig):
         normalize_3d_codes_axis=1,
         backprop_gaze_to_encoder=False,
     ).to(device)
+
+    vanila_gaze_network = gaze_network
 
     #################################
 
@@ -66,15 +73,14 @@ class EyeConfig(AppConfig):
     gaze_network.load_state_dict(ted_weights)
 
 
-class UserEyeConfig(AppConfig):
-    name = 'user_eye'
-    gaze_network = DTED(
-        growth_rate=32,
-        z_dim_app=64,
-        z_dim_gaze=2,
-        z_dim_head=16,
-        decoder_input_c=32,
-        normalize_3d_codes=True,
-        normalize_3d_codes_axis=1,
-        backprop_gaze_to_encoder=False,
-    ).to(device)
+class LivenessConfig(AppConfig):
+    name ='liveness'
+    MODEL_PATH = Path('./authentication/models/liveness.model')
+    model = loadLiveness(MODEL_PATH)
+
+
+class FacenetConfig(AppConfig):
+    name = 'facenet'
+    WEIGHTS_PATH = Path('./authentication/models/facenet_weights.h5')
+    model = loadFacenet(WEIGHTS_PATH)
+

@@ -1,3 +1,9 @@
+import json
+from channels.generic.websocket import AsyncWebsocketConsumer
+import base64
+import cv2
+import numpy as np
+#import imutils
 import asyncio
 import torch
 import cv2
@@ -8,11 +14,16 @@ import pickle
 import os
 import sys
 import random
-from users.apps import EyeConfig, UserEyeConfig, device
+from users.apps import EyeConfig, device
 from channels.generic.websocket import AsyncWebsocketConsumer
 from few_shot_gaze.demo.new_frame_processor import frame_processer
 from few_shot_gaze.demo.monitor2 import monitor
 from few_shot_gaze.src.losses import GazeAngularLoss
+
+from authentication.face_authentication import authentication
+from users.models import User
+
+from asgiref.sync import sync_to_async, async_to_sync
 
 
 class ChatConsumer(AsyncWebsocketConsumer):
@@ -26,7 +37,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
         ted_parameters_path = 'Good_gaze_network.pth.tar'
         ted_weights = torch.load(ted_parameters_path)
-        self.gaze_network = UserEyeConfig.gaze_network
+        self.gaze_network = EyeConfig.vanila_gaze_network
         self.gaze_network.load_state_dict(ted_weights)
         self.subject = 'Gang'
         await self.channel_layer.group_add(
@@ -46,13 +57,16 @@ class ChatConsumer(AsyncWebsocketConsumer):
         print('Disconnected!')
 
     # Receive message from WebSocket
+
     async def receive(self, text_data):
         receive_dict = json.loads(text_data)
         peer_username = receive_dict['peer']
         action = receive_dict['action']
         message = receive_dict['message']
 
-        if (action == 'new-offer') or (action == 'new-answer'):
+
+        if(action == 'new-offer') or (action == 'new-answer'):
+
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
 
@@ -79,6 +93,8 @@ class ChatConsumer(AsyncWebsocketConsumer):
             x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                         por_available=False, show=True, target=None)
             print(x_hat, y_hat)
+            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            #receiver_channel_name = receive_dict['message']['receiver_channel_name']
             await self.send(
                 text_data=json.dumps(
                     {
@@ -121,9 +137,112 @@ class ChatConsumer(AsyncWebsocketConsumer):
         }))
 
 
+class ScreenConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+
+        self.room_group_name = 'Test-Room'
+
+        await self.channel_layer.group_add(
+            self.room_group_name,
+            self.channel_name
+        )
+        await self.accept()
+
+    async def disconnect(self, close_code):
+
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
+
+        print('Disconnected!')
+
+    async def receive(self, text_data):
+        receive_dict = json.loads(text_data)
+        peer_username = receive_dict['peer']
+        action = receive_dict['action']
+        message = receive_dict['message']
+
+        # print('unanswered_offers: ', self.unanswered_offers)
+
+        # print('Message received: ', message)
+
+        print('peer_username: ', peer_username)
+        # print('action: ', action)
+        # print('self.channel_name: ', self.channel_name)
+
+        if (action == 'new-offer') or (action == 'new-answer'):
+            # in case its a new offer or answer
+            # send it to the new peer or initial offerer respectively
+
+            receiver_channel_name = receive_dict['message']['receiver_channel_name']
+
+            print('Sending to ', receiver_channel_name)
+
+            # set new receiver as the current sender
+            receive_dict['message']['receiver_channel_name'] = self.channel_name
+
+            await self.channel_layer.send(
+                receiver_channel_name,
+                {
+                    'type': 'send.sdp',
+                    'receive_dict': receive_dict,
+                }
+            )
+
+            return
+
+        if (action == "get-frame"):
+            msg = receive_dict['frame']
+            img = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            # receiver_channel_name = receive_dict['message']['receiver_channel_name']
+            await self.send(
+                text_data=json.dumps(
+                    {
+                        'peer': peer_username,
+                        'action': action,
+                        'message': message,
+                        'x': 27,
+                        'y': 100
+                    }
+                )
+            )
+
+            return
+
+        # set new receiver as the current sender
+        # so that some messages can be sent
+        # to this channel specifically
+        receive_dict['message']['receiver_channel_name'] = self.channel_name
+
+        # send to all peers
+        await self.channel_layer.group_send(
+            self.room_group_name,
+            {
+                'type': 'send.sdp',
+                'receive_dict': receive_dict,
+            }
+        )
+
+    async def send_sdp(self, event):
+        receive_dict = event['receive_dict']
+
+        this_peer = receive_dict['peer']
+        action = receive_dict['action']
+        message = receive_dict['message']
+
+        await self.send(text_data=json.dumps({
+            'peer': this_peer,
+            'action': action,
+            'message': message,
+        }))
+
+
 class TrainConsumer(AsyncWebsocketConsumer):
 
     async def connect(self):
+
         self.mon = monitor()
         self.room_group_name = "Test-Room"
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
@@ -136,18 +255,20 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.target = (0, 0)
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
         await self.accept()
 
     async def disconnect(self, close_code):
 
-        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+        await self.channel_layer.group_discard(
+            self.room_group_name,
+            self.channel_name
+        )
 
-        print("Disconnected!")
+        print('Disconnected!')
 
-    # Receive message from WebSocket
     async def receive(self, text_data):
         json_data = json.loads(text_data)
-
         if json_data['message'] == 'screen-size':
             self.mon.set_monitor(json_data['height'], json_data['width'])
         else:
@@ -229,7 +350,6 @@ class TrainConsumer(AsyncWebsocketConsumer):
                     [p for n, p in self.gaze_network.named_parameters() if n.startswith('gaze')],
                     lr=lr,
                 )
-
                 self.gaze_network.eval()
                 output_dict = self.gaze_network(input_dict_valid)
                 valid_loss = loss(input_dict_valid, output_dict).cpu()
@@ -258,6 +378,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
 
 
 class AuthenticationConsumer(AsyncWebsocketConsumer):
+
     async def connect(self):
         self.room_group_name = "Test-Room"
 
@@ -270,12 +391,52 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 
         print("Disconnected!")
 
+    @sync_to_async
+    def receive(self, text_data):
+        json_data = json.loads(text_data)
+
+        ID = json_data["username"]
+
+        embedding_bytes = User.objects.filter(
+            username=ID).values_list("face_embedding", flat=True)[0]
+        embedding = np.frombuffer(embedding_bytes, dtype='float32')
+
+        msg = json_data['frame']
+        img = cv2.imdecode(np.fromstring(base64.b64decode(
+            msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+
+        result = authentication(img, embedding)
+        print(result)
+
+        async_to_sync(
+            self.send)(
+            text_data=json.dumps(
+                {
+                    'result': result
+                }
+            )
+        )
+
+
+class CalibrateConsumer(AsyncWebsocketConsumer):
+    async def connect(self):
+
+        self.room_group_name = "Test-Room"
+
+        await self.channel_layer.group_add(self.room_group_name, self.channel_name)
+
+        await self.accept()
+
+    async def disconnect(self, close_code):
+
+        await self.channel_layer.group_discard(self.room_group_name, self.channel_name)
+
+        print("Disconnected!")
+
     # Receive message from WebSocket
     async def receive(self, text_data):
-        json_data = json.loads(text_data)
-        msg = json_data['frame']
-        print(json_data["username"])
-        img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+        msg = text_data
+        img = cv2.imdecode(np.fromstring(base64.b64decode(
+            msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         cv2.imshow('image', img)
-        cv2.waitKey(0)
-        cv2.destroyAllWindows()
+        cv2.waitKey(1)

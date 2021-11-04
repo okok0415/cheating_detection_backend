@@ -2,10 +2,13 @@
 # coding: utf-8
 
 # In[ ]:
+import tensorflow as tf
 
 
-from pathlib import Path
-from functools import partial
+config = tf.compat.v1.ConfigProto()
+config.gpu_options.allow_growth = True
+session = tf.compat.v1.Session(config=config)
+
 
 from tensorflow.keras.models import Model
 from tensorflow.keras.layers import Activation
@@ -534,14 +537,11 @@ def InceptionResNetV2():
 
 	return model
 
-def loadModel():
+	
+def loadFacenet(path):
 	model = InceptionResNetV2()
-	
-	#-----------------------------------
-	
-	model.load_weights('.deepface/weights/facenet_weights.h5')
+	model.load_weights(path)
 	
 	#-----------------------------------
 	
 	return model
-

@@ -1,19 +1,16 @@
-import warnings
-from .detect_align import preprocess_face
-from .facenet import *
-from .ocr import ocr
-# from matplotlib import pyplot as plt
 
+from .detect_align import preprocess_face
+from .ocr import ocr
+
+from users.apps import FacenetConfig
 
 def img_embedding(image):
-
-    model = loadModel()
 
     #detect and align
     facial_img = preprocess_face(image, info=True, target_size=(160, 160))
 
     #represent
-    embedding = model.predict(facial_img)[0].tobytes()
+    embedding = facenetConfig.model.predict(facial_img)[0].tobytes()
 
     return embedding
 
