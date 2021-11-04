@@ -9,3 +9,5 @@ media/photo
 .deepface
 cvdata
 Tesseract-OCR
+venv2
+*.tar

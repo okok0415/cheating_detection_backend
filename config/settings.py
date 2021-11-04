@@ -42,7 +42,7 @@ INSTALLED_APPS = [
     "rest_framework",
     "corsheaders",
     "chat",
-    "users.apps.UsersConfig",
+    "users.apps.UsersConfig"
 ]
 
 MIDDLEWARE = [

@@ -2,19 +2,77 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="fe4ce774-bd3a-49e6-a80d-dcafba434ed4" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/users/models.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/models.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/serializers.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/serializers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/users/views.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/views.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/cheating_detection_backend.iml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/cheating_detection_backend.iml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/vcs.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/vcs.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat/routing.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/routing.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/config/settings.py" beforeDir="false" afterPath="$PROJECT_DIR$/config/settings.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/ext/HRNet_Facial_Landmark_Detection/lib/utils/transforms.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/ext/HRNet_Facial_Landmark_Detection/lib/utils/transforms.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/ext/mtcnn_pytorch/src/get_nets.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/ext/mtcnn_pytorch/src/get_nets.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/face.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/face.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/head.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/head.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/landmarks.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/landmarks.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/monitor2.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/monitor2.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/normalization.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/normalization.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/.gitignore" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/inspectionProfiles/Project_Default.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/inspectionProfiles/profiles_settings.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/misc.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/modules.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/vcs.xml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/.idea/websocket.iml" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/calibrate.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/calibrate_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/client.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/data_collect.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/data_collect_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/gaze_tracking.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/gaze_tracking_server.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/new_frame_processor.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/server_test1/index.html" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/websocket/server_test1/server2.py" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/requirements.txt" beforeDir="false" afterPath="$PROJECT_DIR$/requirements.txt" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/apps.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/apps.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/users/embedder.py" beforeDir="false" afterPath="$PROJECT_DIR$/users/embedder.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FileTemplateManagerImpl">
+    <option name="RECENT_TEMPLATES">
+      <list>
+        <option value="Python Script" />
+      </list>
+    </option>
+  </component>
+  <component name="FlaskConsoleOptions" custom-start-script="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))">
+    <envs>
+      <env key="FLASK_APP" value="app" />
+    </envs>
+    <option name="myCustomStartScript" value="import sys&#10;sys.path.extend([WORKING_DIR_AND_PYTHON_PATHS])&#10;from flask.cli import ScriptInfo&#10;locals().update(ScriptInfo(create_app=None).load_app().make_shell_context())&#10;print(&quot;Python %s on %s\nApp: %s [%s]\nInstance: %s&quot; % (sys.version, sys.platform, app.import_name, app.env, app.instance_path))" />
+    <option name="myEnvs">
+      <map>
+        <entry key="FLASK_APP" value="app" />
+      </map>
+    </option>
+  </component>
   <component name="Git.Settings">
-    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/few_shot_gaze" />
+  </component>
+  <component name="GitSEFilterConfiguration">
+    <file-type-list>
+      <filtered-out-file-type name="LOCAL_BRANCH" />
+      <filtered-out-file-type name="REMOTE_BRANCH" />
+      <filtered-out-file-type name="TAG" />
+      <filtered-out-file-type name="COMMIT_BY_MESSAGE" />
+    </file-type-list>
   </component>
   <component name="ProjectId" id="1zLiRZ07QLPOgYAzjgHfkObEm3D" />
+  <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectViewState">
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
@@ -22,8 +80,41 @@
   <component name="PropertiesComponent">
     <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
     <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="node.js.detected.package.eslint" value="true" />
+    <property name="node.js.selected.package.eslint" value="(autodetect)" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
+    <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PyCharm 2021.2.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
+  </component>
+  <component name="RunManager">
+    <configuration name="manage" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="cheating_detection_backend" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <EXTENSION ID="PythonCoverageRunConfigurationExtension" runner="coverage.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/manage.py" />
+      <option name="PARAMETERS" value="runserver" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <recent_temporary>
+      <list>
+        <item itemvalue="Python.manage" />
+      </list>
+    </recent_temporary>
   </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
@@ -33,7 +124,32 @@
       <option name="number" value="Default" />
       <option name="presentableId" value="Default" />
       <updated>1633933761666</updated>
+      <workItem from="1635830858233" duration="4637000" />
+      <workItem from="1635841756454" duration="14873000" />
+      <workItem from="1635859535489" duration="491000" />
+      <workItem from="1635860097100" duration="610000" />
+      <workItem from="1635907057759" duration="1235000" />
+      <workItem from="1635909034585" duration="5114000" />
+      <workItem from="1635918901806" duration="8042000" />
+      <workItem from="1635928379827" duration="15941000" />
     </task>
     <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
+          <line>162</line>
+          <option name="timeStamp" value="3" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="com.intellij.coverage.CoverageDataManagerImpl">
+    <SUITE FILE_PATH="coverage/cheating_detection_backend$manage.coverage" NAME="manage Coverage Results" MODIFIED="1635948143814" SOURCE_PROVIDER="com.intellij.coverage.DefaultCoverageFileProvider" RUNNER="coverage.py" COVERAGE_BY_TEST_ENABLED="true" COVERAGE_TRACING_ENABLED="false" WORKING_DIRECTORY="$PROJECT_DIR$" />
   </component>
 </project>
