@@ -45,6 +45,7 @@ INSTALLED_APPS = [
     "users.apps.UsersConfig",
     "authentication.facenet",
     "authentication.liveness",
+    "board"
 ]
 
 MIDDLEWARE = [
@@ -94,6 +95,7 @@ DATABASES = {
             'port': 11210
         }
     }}
+
 """
 DATABASES = {
     "default": {
