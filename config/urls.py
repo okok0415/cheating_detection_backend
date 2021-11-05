@@ -23,7 +23,6 @@ from . import settings
 urlpatterns = [
     url(r"^admin/", admin.site.urls),
     url(r"^user/", include("users.urls")),
-    url(r"^result/", include("result.urls")),
 ]
 
 if settings.DEBUG:
