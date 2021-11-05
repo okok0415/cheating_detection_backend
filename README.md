@@ -27,7 +27,9 @@
 
 10. Redis 다운로드 받으세요. github.com/tporadowski/redis/releases
 
-## Release
+11. (for windows) 하다가 gcc && cmake && visual studio && make && torch
+
+# Release
 
 |날짜|내용
 |---|---|
