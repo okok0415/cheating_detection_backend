@@ -108,7 +108,6 @@ data
 .vscode
 .idea
 .DS_Store
-hrnetv2_pretrained/
 output
 log
 *.swp
