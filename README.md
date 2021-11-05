@@ -9,7 +9,11 @@
 
 3. venv/Scripts/activate (cmd), venv/Scripts/Activate.ps1(powershell) (가상환경 들어가기 프로젝트 실행할 때 마다 실행해야됨)
 
-4. pip install -r requirements.txt (torch의 경우 그래픽 카드 버전에 맞는 버전을 설치)
+4. pip install -r requirements.txt 
+
+    4.1 eos-py의 경우는 Visual Studio 2019에서 'Desktop development with C++'를 설치하고 진행
+    
+    4.2 Pytorch의 경우 사용자의 그래픽카드에 맞는 torch를 공식 홈페이지에서 다운받아 진행
 
 5. https://drive.google.com/drive/folders/19mypcFLYxafz8EoJkTdxAOqwuBgO5Nxa?usp=sharing 에서 face_detector,models, Tesseract-OCR 다운로드 후 authentication 파일안에 넣어준다.
 
