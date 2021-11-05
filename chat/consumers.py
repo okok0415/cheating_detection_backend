@@ -440,7 +440,7 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
     # Receive message from WebSocket
     async def receive(self, text_data):
         if len(self.frames) == 20:
-            self.send(json.dumps(
+            await self.send(json.dumps(
                     {
                         'message': 'stop'
                     }
@@ -448,8 +448,8 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
             )
             return
         msg = text_data
-        frame = cv2.imdecode(np.fromstring(base64.b64decode(
-            msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+
+        frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         frame_copy = frame.copy()
         gray = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
         retc, corners = cv2.findChessboardCorners(gray, (9, 6), None)
@@ -468,11 +468,17 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 self.obj_points.append(self.pts)
                 self.frames.append(frame)
                 self.cnt += 1
-
                 if len(self.frames) == 20:
-                    self.send(json.dumps(
+                    await self.send(json.dumps(
                         {
                             'message': 'stop'
+                        }
+                    )
+                )
+                else:
+                    await self.send(json.dumps(
+                        {
+                            'message': 'image get'
                         }
                     )
                     )
