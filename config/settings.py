@@ -43,8 +43,7 @@ INSTALLED_APPS = [
     "corsheaders",
     "chat",
     "users.apps.UsersConfig",
-    "authentication.facenet",
-    "authentication.liveness",
+    "authentication.model_loading",
 ]
 
 MIDDLEWARE = [

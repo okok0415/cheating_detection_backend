@@ -198,31 +198,33 @@ class frame_processer:
                 '''
 
             if show:
-                # compute eye gaze and point of regard
-                for k, v in input_dict.items():
-                    input_dict[k] = torch.FloatTensor(v).to(device).detach()
+                with torch.no_grad():
+                    # compute eye gaze and point of regard
+                    for k, v in input_dict.items():
+                        input_dict[k] = torch.FloatTensor(v).to(device).detach()
 
-                gaze_network.eval()
-                output_dict = gaze_network(input_dict)
-                output = output_dict['gaze_a_hat']
-                g_cnn = output.data.cpu().numpy()
-                g_cnn = g_cnn.reshape(3, 1)
-                g_cnn /= np.linalg.norm(g_cnn)
+                    gaze_network.eval()
+                    output_dict = gaze_network(input_dict)
+                    output = output_dict['gaze_a_hat']
+                    g_cnn = output.data.cpu().numpy()
+                    g_cnn = g_cnn.reshape(3, 1)
+                    g_cnn /= np.linalg.norm(g_cnn)
 
-                # compute the POR on z=0 plane
-                g_n_forward = -g_cnn
-                g_cam_forward = inverse_M * g_n_forward
-                g_cam_forward = g_cam_forward / np.linalg.norm(g_cam_forward)
+                    # compute the POR on z=0 plane
+                    g_n_forward = -g_cnn
+                    g_cam_forward = inverse_M * g_n_forward
+                    g_cam_forward = g_cam_forward / np.linalg.norm(g_cam_forward)
 
-                d = -gaze_cam_origin[2] / g_cam_forward[2]
-                por_cam_x = gaze_cam_origin[0] + d * g_cam_forward[0]
-                por_cam_y = gaze_cam_origin[1] + d * g_cam_forward[1]
-                por_cam_z = 0.0
+                    d = -gaze_cam_origin[2] / g_cam_forward[2]
+                    por_cam_x = gaze_cam_origin[0] + d * g_cam_forward[0]
+                    por_cam_y = gaze_cam_origin[1] + d * g_cam_forward[1]
+                    por_cam_z = 0.0
 
-                x_pixel_hat, y_pixel_hat = mon.camera_to_monitor(por_cam_x, por_cam_y)
-                output_tracked = self.kalman_filter_gaze[0].update(x_pixel_hat + 1j * y_pixel_hat)
-                x_pixel_hat, y_pixel_hat = np.ceil(np.real(output_tracked)), np.ceil(np.imag(output_tracked))
-                return x_pixel_hat, y_pixel_hat
+                    x_pixel_hat, y_pixel_hat = mon.camera_to_monitor(por_cam_x, por_cam_y)
+                    output_tracked = self.kalman_filter_gaze[0].update(x_pixel_hat + 1j * y_pixel_hat)
+                    x_pixel_hat, y_pixel_hat = np.ceil(np.real(output_tracked)), np.ceil(np.imag(output_tracked))
+                    torch.cuda.empty_cache()
+                    return x_pixel_hat, y_pixel_hat
 
 
 

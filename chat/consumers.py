@@ -1,10 +1,3 @@
-import json
-from channels.generic.websocket import AsyncWebsocketConsumer
-import base64
-import cv2
-import numpy as np
-#import imutils
-import asyncio
 import torch
 import cv2
 import numpy as np
@@ -35,9 +28,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
-        ted_parameters_path = 'Good_gaze_network.pth.tar'
+        ted_parameters_path = 'Gang_gaze_network.pth.tar'
         ted_weights = torch.load(ted_parameters_path)
-        self.gaze_network = EyeConfig.vanila_gaze_network
+        self.gaze_network = EyeConfig.vanila_gaze_network.to(device)
         self.gaze_network.load_state_dict(ted_weights)
         self.subject = 'Gang'
         await self.channel_layer.group_add(
@@ -54,19 +47,22 @@ class ChatConsumer(AsyncWebsocketConsumer):
             self.channel_name
         )
 
+        torch.cuda.empty_cache()
+
         print('Disconnected!')
 
     # Receive message from WebSocket
-
     async def receive(self, text_data):
-        receive_dict = json.loads(text_data)
+        try:
+            receive_dict = json.loads(text_data)
+        except:
+            self.send(text_data, 'Data Error')
+            return
         peer_username = receive_dict['peer']
         action = receive_dict['action']
         message = receive_dict['message']
 
-
-        if(action == 'new-offer') or (action == 'new-answer'):
-
+        if action == 'new-offer' or action == 'new-answer':
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
 
@@ -92,20 +88,18 @@ class ChatConsumer(AsyncWebsocketConsumer):
             frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                         por_available=False, show=True, target=None)
-            print(x_hat, y_hat)
-            img = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-            #receiver_channel_name = receive_dict['message']['receiver_channel_name']
-            await self.send(
-                text_data=json.dumps(
-                    {
-                        'peer': peer_username,
-                        'action': action,
-                        'message': message,
-                        'x': x_hat,
-                        'y': y_hat,
-                    }
+            if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            'peer': peer_username,
+                            'action': action,
+                            'message': message,
+                            'x': x_hat,
+                            'y': y_hat,
+                        }
+                    )
                 )
-            )
 
             return
 
@@ -250,7 +244,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.frame_processer = frame_processer(self.cam_calib)
         self.data = {'image_a': [], 'gaze_a': [], 'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
         self.cnt = 0
-        self.gaze_network = EyeConfig.gaze_network
+        self.gaze_network = EyeConfig.gaze_network.to(device)
         self.subject = 'Gang'
         self.target = (0, 0)
 
@@ -264,6 +258,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
             self.room_group_name,
             self.channel_name
         )
+        torch.cuda.empty_cache()
 
         print('Disconnected!')
 
@@ -421,6 +416,14 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 class CalibrateConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
+        self.criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+        self.pts = np.zeros((6 * 9, 3), np.float32)
+        self.pts[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2)
+        # capture calibration frames
+        self.obj_points = []  # 3d point in real world space
+        self.img_points = []  # 2d points in image plane.
+        self.frames = []
+        self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         self.room_group_name = "Test-Room"
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -435,8 +438,46 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
+        if len(self.frames) >= 20:
+            self.send('Stop it!')
         msg = text_data
-        img = cv2.imdecode(np.fromstring(base64.b64decode(
+        frame = cv2.imdecode(np.fromstring(base64.b64decode(
             msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-        cv2.imshow('image', img)
-        cv2.waitKey(1)
+        frame_copy = frame.copy()
+        gray = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
+        retc, corners = cv2.findChessboardCorners(gray, (9, 6), None)
+        if retc:
+            cv2.cornerSubPix(gray, corners, (11, 11), (-1, -1), self.criteria)
+            # Draw and display the corners
+            cv2.drawChessboardCorners(frame_copy, (9, 6), corners, True)
+            '''
+            cv2.imshow('points', frame_copy)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            '''
+            # s to save, c to continue, q to quit
+            if len(self.frames) < 20:
+                self.img_points.append(corners)
+                self.obj_points.append(self.pts)
+                self.frames.append(frame)
+                await self.send('echo : image get')
+            else:
+                # compute calibration matrices
+                ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.obj_points, self.img_points,
+                                                                   self.frames[0].shape[0:2], None,
+                                                                   None)
+                # check
+                error = 0.0
+                for i in range(len(self.frames)):
+                    proj_imgpoints, _ = cv2.projectPoints(self.obj_points[i], rvecs[i], tvecs[i], mtx, dist)
+                    error += (cv2.norm(self.img_points[i], proj_imgpoints, cv2.NORM_L2) / len(proj_imgpoints))
+                print("Camera calibrated successfully, total re-projection error: %f" % (error / len(self.frames)))
+
+                self.cam_calib['mtx'] = mtx
+                self.cam_calib['dist'] = dist
+                print("Camera parameters:")
+                print(self.cam_calib)
+                pickle.dump(self.cam_calib, open("calib_cam.pkl", "wb"))
+                await self.send('echo : finish calibrate')
+
+                return

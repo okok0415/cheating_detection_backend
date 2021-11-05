@@ -1,30 +1,15 @@
 import torch
 import os
 import sys
+from django.apps import AppConfig
+from few_shot_gaze.src.models import DTED
+from pathlib import Path
+from authentication.model_loading import loadFacenet, loadLiveness
+from authentication.liveness import *
 
 os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 sys.path.append(os.pardir)
-
-from django.apps import AppConfig
-from few_shot_gaze.src.models import DTED
-
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
-
-
-#################################
-# Load gaze network
-#################################
-ted_parameters_path = r'few_shot_gaze/demo/demo_weights/weights_ted.pth.tar'
-maml_parameters_path = r'few_shot_gaze/demo/demo_weights/weights_maml'
-k = 9
-lr = 1e-5
-steps = 5000
-cnt = 0
-
-from pathlib import Path
-
-from authentication.facenet import loadFacenet
-from authentication.liveness import *
 
 
 class UsersConfig(AppConfig):
@@ -33,7 +18,16 @@ class UsersConfig(AppConfig):
 
 
 class EyeConfig(AppConfig):
+    #################################
+    # Load gaze network
+    #################################
     name = 'eye'
+    ted_parameters_path = r'few_shot_gaze/demo/demo_weights/weights_ted.pth.tar'
+    maml_parameters_path = r'few_shot_gaze/demo/demo_weights/weights_maml'
+    k = 9
+    lr = 1e-5
+    steps = 5000
+    cnt = 0
     gaze_network = DTED(
         growth_rate=32,
         z_dim_app=64,
@@ -44,9 +38,7 @@ class EyeConfig(AppConfig):
         normalize_3d_codes_axis=1,
         backprop_gaze_to_encoder=False,
     ).to(device)
-
     vanila_gaze_network = gaze_network
-
     #################################
 
     # Load DT-ED weights if available
@@ -72,9 +64,10 @@ class EyeConfig(AppConfig):
     })
     gaze_network.load_state_dict(ted_weights)
 
+    torch.cuda.empty_cache()
 
 class LivenessConfig(AppConfig):
-    name ='liveness'
+    name = 'liveness'
     MODEL_PATH = Path('./authentication/models/liveness.model')
     model = loadLiveness(MODEL_PATH)
 

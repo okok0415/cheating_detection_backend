@@ -10,12 +10,12 @@ def img_embedding(image):
     facial_img = preprocess_face(image, info=True, target_size=(160, 160))
 
     #represent
-    embedding = facenetConfig.model.predict(facial_img)[0].tobytes()
+    embedding = FacenetConfig.model.predict(facial_img)[0].tobytes()
 
     return embedding
 
 
-def info_extractor(image) :
+def info_extractor(image):
     
     name, birth = ocr(image)
 
