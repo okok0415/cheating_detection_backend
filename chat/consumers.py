@@ -62,6 +62,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         action = receive_dict['action']
         message = receive_dict['message']
 
+        if  action == "screen-size":
+            print("screen-size")
+
         if action == 'new-offer' or action == 'new-answer':
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
@@ -89,19 +92,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             try:
                 x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
-                if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
-                    await self.send(
-                        text_data=json.dumps(
-                            {
-                                'peer': peer_username,
-                                'action': action,
-                                'message': message,
-                                'cheating': '어딜보냐이새기야',
-                                'x': x_hat,
-                                'y': y_hat,
-                            }
-                        )
+            #    if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            'peer': peer_username,
+                            'action': action,
+                            'message': message,
+                            'cheating': 'please look monitor',
+                            'x': x_hat,
+                            'y': y_hat,
+                        }
                     )
+                )
             except:
                 await self.send(
                         text_data=json.dumps(
@@ -109,7 +112,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'peer': peer_username,
                                 'action': action,
                                 'message': message,
-                                'cheating': '얼굴가운데로놔라',
+                                'cheating': "can't find you",
                                 'x': 0,
                                 'y': 0,
                             }
@@ -118,6 +121,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
             return
 
+        
         # set new receiver as the current sender
         # so that some messages can be sent
         # to this channel specifically
@@ -381,7 +385,13 @@ class TrainConsumer(AsyncWebsocketConsumer):
                         output_dict = self.gaze_network(input_dict_valid)
                         valid_loss = loss(input_dict_valid, output_dict).cpu()
                         message = '%04d> Train: %.2f, Validation: %.2f' % (i + 1, train_loss.item(), valid_loss.item())
-                        await self.send(message)
+                        await self.send(
+                                text_data=json.dumps(
+                                    {
+                                        'message' : message
+                                    }
+                                )
+                            )
                         print(message)
                 torch.save(self.gaze_network.state_dict(), '%s_gaze_network.pth.tar' % self.subject)
                 torch.cuda.empty_cache()
