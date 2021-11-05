@@ -28,7 +28,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
-        ted_parameters_path = 'Gang_gaze_network.pth.tar'
+        ted_parameters_path = 'JungMin_gaze_network.pth.tar'
         ted_weights = torch.load(ted_parameters_path)
         self.gaze_network = EyeConfig.vanila_gaze_network.to(device)
         self.gaze_network.load_state_dict(ted_weights)
@@ -86,20 +86,35 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if action == "get-frame":
             msg = receive_dict['frame']
             frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
-            x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
-                                                        por_available=False, show=True, target=None)
-            if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
-                await self.send(
-                    text_data=json.dumps(
-                        {
-                            'peer': peer_username,
-                            'action': action,
-                            'message': message,
-                            'x': x_hat,
-                            'y': y_hat,
-                        }
+            try:
+                x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
+                                                            por_available=False, show=True, target=None)
+                if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
+                    await self.send(
+                        text_data=json.dumps(
+                            {
+                                'peer': peer_username,
+                                'action': action,
+                                'message': message,
+                                'cheating': '어딜보냐이새기야',
+                                'x': x_hat,
+                                'y': y_hat,
+                            }
+                        )
                     )
-                )
+            except:
+                await self.send(
+                        text_data=json.dumps(
+                            {
+                                'peer': peer_username,
+                                'action': action,
+                                'message': message,
+                                'cheating': '얼굴가운데로놔라',
+                                'x': 0,
+                                'y': 0,
+                            }
+                        )
+                    )
 
             return
 
@@ -240,12 +255,12 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.mon = monitor()
         self.room_group_name = "Test-Room"
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
-        self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
+        self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         self.data = {'image_a': [], 'gaze_a': [], 'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
         self.cnt = 0
         self.gaze_network = EyeConfig.gaze_network.to(device)
-        self.subject = 'Gang'
+        self.subject = 'JungMin'
         self.target = (0, 0)
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -290,7 +305,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
                 n = len(self.data['image_a'])
                 k = 9
                 lr = 1e-5
-                steps = 5000
+                steps = 2000
                 cnt = 0
                 _, c, h, w = self.data['image_a'][0].shape
                 img = np.zeros((n, c, h, w))
@@ -438,11 +453,17 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        if len(self.frames) >= 20:
-            self.send('Stop it!')
+        if len(self.frames) == 20:
+            await self.send(text_data=json.dumps({
+            'message': 'stop',
+        }))
+            return
+
         msg = text_data
+        
         frame = cv2.imdecode(np.fromstring(base64.b64decode(
             msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+
         frame_copy = frame.copy()
         gray = cv2.cvtColor(frame_copy, cv2.COLOR_BGR2GRAY)
         retc, corners = cv2.findChessboardCorners(gray, (9, 6), None)
@@ -460,8 +481,11 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 self.img_points.append(corners)
                 self.obj_points.append(self.pts)
                 self.frames.append(frame)
-                await self.send('echo : image get')
-            else:
+                if len(self.frames) % 5 == 0 and len(self.frames) != 20:
+                    await self.send(text_data=json.dumps({
+                            'message': 'change',
+                        }))
+            if len(self.frames) == 20:
                 # compute calibration matrices
                 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.obj_points, self.img_points,
                                                                    self.frames[0].shape[0:2], None,
@@ -478,6 +502,8 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 print("Camera parameters:")
                 print(self.cam_calib)
                 pickle.dump(self.cam_calib, open("calib_cam.pkl", "wb"))
-                await self.send('echo : finish calibrate')
+                await self.send(text_data=json.dumps({
+                        'message': 'finish',
+                    }))
 
                 return
