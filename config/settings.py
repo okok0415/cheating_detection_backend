@@ -44,6 +44,7 @@ INSTALLED_APPS = [
     "chat",
     "users.apps.UsersConfig",
     "authentication.model_loading",
+    "board"
 ]
 
 MIDDLEWARE = [
@@ -93,6 +94,7 @@ DATABASES = {
             'port': 11210
         }
     }}
+
 """
 DATABASES = {
     "default": {
