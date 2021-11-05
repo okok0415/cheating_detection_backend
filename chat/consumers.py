@@ -186,7 +186,7 @@ class ScreenConsumer(AsyncWebsocketConsumer):
 
             return
 
-        if (action == "get-frame"):
+        if action == "get-frame":
             msg = receive_dict['frame']
             img = cv2.imdecode(np.fromstring(base64.b64decode(
                 msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
@@ -425,6 +425,7 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
         self.frames = []
         self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         self.room_group_name = "Test-Room"
+        self.cnt = 0
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
@@ -438,8 +439,14 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        if len(self.frames) >= 20:
-            self.send('Stop it!')
+        if len(self.frames) == 20:
+            self.send(json.dumps(
+                    {
+                        'message': 'stop'
+                    }
+                )
+            )
+            return
         msg = text_data
         frame = cv2.imdecode(np.fromstring(base64.b64decode(
             msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
@@ -460,7 +467,15 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 self.img_points.append(corners)
                 self.obj_points.append(self.pts)
                 self.frames.append(frame)
-                await self.send('echo : image get')
+                self.cnt += 1
+
+                if len(self.frames) == 20:
+                    self.send(json.dumps(
+                        {
+                            'message': 'stop'
+                        }
+                    )
+                    )
             else:
                 # compute calibration matrices
                 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.obj_points, self.img_points,
