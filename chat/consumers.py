@@ -25,10 +25,10 @@ class ChatConsumer(AsyncWebsocketConsumer):
         self.room_group_name = "Test-Room"
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         # 이것도 디비에 저장?
-        self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
+        self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
-        ted_parameters_path = 'JungMin_gaze_network.pth.tar'
+        ted_parameters_path = 'Gang_gaze_network.pth.tar'
         ted_weights = torch.load(ted_parameters_path)
         self.gaze_network = EyeConfig.vanila_gaze_network.to(device)
         self.gaze_network.load_state_dict(ted_weights)
@@ -86,9 +86,11 @@ class ChatConsumer(AsyncWebsocketConsumer):
         if action == "get-frame":
             msg = receive_dict['frame']
             frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            frame = cv2.resize(frame, dsize=(640, 480))
             try:
                 x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
+                print(x_hat, y_hat)
                 if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
                     await self.send(
                         text_data=json.dumps(
@@ -255,12 +257,12 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.mon = monitor()
         self.room_group_name = "Test-Room"
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
-        self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
+        self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         self.data = {'image_a': [], 'gaze_a': [], 'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
         self.cnt = 0
         self.gaze_network = EyeConfig.gaze_network.to(device)
-        self.subject = 'JungMin'
+        self.subject = 'Gang'
         self.target = (0, 0)
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
@@ -291,6 +293,12 @@ class TrainConsumer(AsyncWebsocketConsumer):
                 self.target = (g_x, g_y)
 
             frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            frame = cv2.resize(frame, dsize=(640, 480))
+            '''
+            cv2.imshow('points', frame)
+            cv2.waitKey(0)
+            cv2.destroyAllWindows()
+            '''
             processed_patch, g_n, h_n, R_gaze_a, R_head_a = self.frame_processer.process(self.subject, frame, self.mon,
                                                                                          device, self.gaze_network,
                                                                                          por_available=True, show=False,

@@ -115,7 +115,7 @@ subject = input('Enter subject name: ')
 data = collect_data(cam_cap, mon, calib_points=9, rand_points=4)
 # adjust steps and lr for best results
 # To debug calibration, set show=True
-gaze_network = fine_tune(subject, data, frame_processor, mon, device, gaze_network, k, steps=5000, lr=1e-5, show=False)
+gaze_network = fine_tune(subject, data, frame_processor, mon, device, gaze_network, k, steps=3000, lr=1e-5, show=False)
 
 #################################
 # Run on live webcam feed and

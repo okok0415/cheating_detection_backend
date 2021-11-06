@@ -9,7 +9,7 @@ class monitor:
         #self.w_pixels = GetSystemMetrics(0)
         self.h_pixels = 1080
         self.w_pixels = 1920
-        self.display_to_cam = 30
+        self.display_to_cam = 50
         self.h_mm = self.h_pixels * 0.26458333333333
         self.w_mm = self.w_pixels * 0.26458333333333
 

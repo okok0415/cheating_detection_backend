@@ -70,7 +70,7 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PyCharm 2021.2.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
-  <component name="RunManager" selected="Python.calibrate_camera">
+  <component name="RunManager" selected="Python.run_demo">
     <configuration name="calibrate_camera" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cheating_detection_backend" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -114,8 +114,30 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
+    <configuration name="run_demo" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="cheating_detection_backend" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/few_shot_gaze/demo" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/few_shot_gaze/demo/run_demo.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.run_demo" />
         <item itemvalue="Python.calibrate_camera" />
         <item itemvalue="Python.manage" />
       </list>
@@ -156,22 +178,22 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state width="1482" height="281" key="GridCell.Tab.0.bottom" timestamp="1636099626836">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom" timestamp="1636120282399">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1482" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1636099626836" />
-    <state width="1482" height="281" key="GridCell.Tab.0.center" timestamp="1636099626836">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282399" />
+    <state width="1899" height="281" key="GridCell.Tab.0.center" timestamp="1636120282398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1482" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1636099626836" />
-    <state width="1482" height="281" key="GridCell.Tab.0.left" timestamp="1636099626836">
+    <state width="1899" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
+    <state width="1899" height="281" key="GridCell.Tab.0.left" timestamp="1636120282398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1482" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1636099626836" />
-    <state width="1482" height="281" key="GridCell.Tab.0.right" timestamp="1636099626836">
+    <state width="1899" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right" timestamp="1636120282398">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1482" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1636099626836" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
@@ -183,22 +205,22 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>428</line>
+          <line>436</line>
           <option name="timeStamp" value="5" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>480</line>
+          <line>488</line>
           <option name="timeStamp" value="6" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>470</line>
+          <line>478</line>
           <option name="timeStamp" value="7" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>147</line>
+          <line>149</line>
           <option name="timeStamp" value="8" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -209,6 +231,11 @@
           <url>file://$PROJECT_DIR$/few_shot_gaze/demo/calibrate_camera.py</url>
           <line>8</line>
           <option name="timeStamp" value="10" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
+          <line>150</line>
+          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
