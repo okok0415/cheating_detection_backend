@@ -19,7 +19,11 @@
     <select />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="fe4ce774-bd3a-49e6-a80d-dcafba434ed4" name="Default Changelist" comment="" />
+    <list default="true" id="fe4ce774-bd3a-49e6-a80d-dcafba434ed4" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/calib_cam.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/calib_cam.pkl" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/consumers.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -178,6 +182,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="932" y="324" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1636165470598">
+      <screen x="0" y="0" width="1920" height="1040" />
+    </state>
+    <state x="932" y="324" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1636165470598" />
     <state width="1899" height="281" key="GridCell.Tab.0.bottom" timestamp="1636120282399">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
@@ -205,37 +213,12 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>436</line>
-          <option name="timeStamp" value="5" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>488</line>
-          <option name="timeStamp" value="6" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>478</line>
-          <option name="timeStamp" value="7" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>149</line>
-          <option name="timeStamp" value="8" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
           <option name="timeStamp" value="9" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/few_shot_gaze/demo/calibrate_camera.py</url>
           <line>8</line>
           <option name="timeStamp" value="10" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/chat/consumers.py</url>
-          <line>150</line>
-          <option name="timeStamp" value="11" />
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>

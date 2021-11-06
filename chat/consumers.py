@@ -62,6 +62,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
         action = receive_dict['action']
         message = receive_dict['message']
 
+        if action == "screen-size":
+            self.mon.set_monitor(receive_dict['height'], receive_dict['width'])
+
         if action == 'new-offer' or action == 'new-answer':
             # in case its a new offer or answer
             # send it to the new peer or initial offerer respectively
@@ -90,20 +93,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             try:
                 x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
-                print(x_hat, y_hat)
-                if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
-                    await self.send(
-                        text_data=json.dumps(
-                            {
-                                'peer': peer_username,
-                                'action': action,
-                                'message': message,
-                                'cheating': '어딜보냐이새기야',
-                                'x': x_hat,
-                                'y': y_hat,
-                            }
-                        )
+            #    if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
+                await self.send(
+                    text_data=json.dumps(
+                        {
+                            'peer': peer_username,
+                            'action': action,
+                            'message': message,
+                            'cheating': 'please look monitor',
+                            'x': x_hat,
+                            'y': y_hat,
+                        }
                     )
+                )
             except:
                 await self.send(
                         text_data=json.dumps(
@@ -111,7 +113,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'peer': peer_username,
                                 'action': action,
                                 'message': message,
-                                'cheating': '얼굴가운데로놔라',
+                                'cheating': "can't find you",
                                 'x': 0,
                                 'y': 0,
                             }
@@ -285,6 +287,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
             self.mon.set_monitor(json_data['height'], json_data['width'])
         else:
             self.cnt += 1
+            print(self.cnt)
             msg = json_data['frame']
             if json_data['message'] == 'clicked':
                 g_x = json_data['x']
@@ -389,7 +392,13 @@ class TrainConsumer(AsyncWebsocketConsumer):
                         output_dict = self.gaze_network(input_dict_valid)
                         valid_loss = loss(input_dict_valid, output_dict).cpu()
                         message = '%04d> Train: %.2f, Validation: %.2f' % (i + 1, train_loss.item(), valid_loss.item())
-                        await self.send(message)
+                        await self.send(
+                                text_data=json.dumps(
+                                    {
+                                        'message' : message
+                                    }
+                                )
+                            )
                         print(message)
                 torch.save(self.gaze_network.state_dict(), '%s_gaze_network.pth.tar' % self.subject)
                 torch.cuda.empty_cache()
@@ -449,6 +458,7 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
         self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         self.room_group_name = "Test-Room"
         self.cnt = 0
+        self.num_frame = 2
 
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
@@ -462,7 +472,7 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
 
     # Receive message from WebSocket
     async def receive(self, text_data):
-        if len(self.frames) == 20:
+        if len(self.frames) == self.num_frame * 4:
             await self.send(text_data=json.dumps({
             'message': 'stop',
         }))
@@ -485,15 +495,15 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
             cv2.destroyAllWindows()
             '''
             # s to save, c to continue, q to quit
-            if len(self.frames) < 20:
+            if len(self.frames) < self.num_frame * 4:
                 self.img_points.append(corners)
                 self.obj_points.append(self.pts)
                 self.frames.append(frame)
-                if len(self.frames) % 5 == 0 and len(self.frames) != 20:
+                if len(self.frames) % self.num_frame == 0 and len(self.frames) != self.num_frame * 4:
                     await self.send(text_data=json.dumps({
                             'message': 'change',
                         }))
-            if len(self.frames) == 20:
+            if len(self.frames) == self.num_frame * 4:
                 # compute calibration matrices
                 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.obj_points, self.img_points,
                                                                    self.frames[0].shape[0:2], None,
