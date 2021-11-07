@@ -92,19 +92,19 @@ class ChatConsumer(AsyncWebsocketConsumer):
             try:
                 x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
-            #    if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
-                await self.send(
-                    text_data=json.dumps(
-                        {
-                            'peer': peer_username,
-                            'action': action,
-                            'message': message,
-                            'cheating': 'please look monitor',
-                            'x': x_hat,
-                            'y': y_hat,
-                        }
+                if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
+                    await self.send(
+                        text_data=json.dumps(
+                            {
+                                'peer': peer_username,
+                                'action': action,
+                                'message': message,
+                                'cheating': 'please look monitor',
+                                'x': x_hat,
+                                'y': y_hat,
+                            }
+                        )
                     )
-                )
             except:
                 await self.send(
                         text_data=json.dumps(
