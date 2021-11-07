@@ -20,10 +20,10 @@ os.environ['KMP_DUPLICATE_LIB_OK'] = 'True'
 import warnings
 warnings.filterwarnings("ignore")
 
-from demo.monitor2 import monitor
-from demo.camera import cam_calibrate
-from demo.person_calibration import collect_data, fine_tune
-from demo.frame_processor import frame_processer
+from few_shot_gaze.demo.monitor2 import monitor
+from few_shot_gaze.demo.camera import cam_calibrate
+from few_shot_gaze.demo.person_calibration import collect_data, fine_tune
+from few_shot_gaze.demo.frame_processor import frame_processer
 
 #################################
 # Start camera
@@ -55,7 +55,7 @@ else:
 #################################
 # Load gaze network
 #################################
-ted_parameters_path = 'demo_weights/weights_ted.pth.tar'
+ted_parameters_path = 'test_gaze_network.pth.tar'
 maml_parameters_path = 'demo_weights/weights_maml'
 k = 9
 
@@ -63,8 +63,8 @@ k = 9
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 # Create network
-sys.path.append("../src")
-from src.models import DTED
+sys.path.append("few_shot_gaze/src")
+from few_shot_gaze.src.models import DTED
 gaze_network = DTED(
     growth_rate=32,
     z_dim_app=64,
@@ -82,6 +82,7 @@ gaze_network = DTED(
 assert os.path.isfile(ted_parameters_path)
 print('> Loading: %s' % ted_parameters_path)
 ted_weights = torch.load(ted_parameters_path)
+
 if torch.cuda.device_count() == 1:
     if next(iter(ted_weights.keys())).startswith('module.'):
         ted_weights = dict([(k[7:], v) for k, v in ted_weights.items()])
@@ -89,6 +90,7 @@ if torch.cuda.device_count() == 1:
 #####################################
 
 # Load MAML MLP weights if available
+'''
 full_maml_parameters_path = maml_parameters_path +'/%02d.pth.tar' % k
 assert os.path.isfile(full_maml_parameters_path)
 print('> Loading: %s' % full_maml_parameters_path)
@@ -99,6 +101,7 @@ ted_weights.update({  # rename to fit
     'gaze2.weight': maml_weights['layer02.weights'],
     'gaze2.bias':   maml_weights['layer02.bias'],
 })
+'''
 gaze_network.load_state_dict(ted_weights)
 
 #################################
@@ -109,16 +112,4 @@ gaze_network.load_state_dict(ted_weights)
 mon = monitor()
 frame_processor = frame_processer(cam_calib)
 
-# collect person calibration data and fine-
-# tune gaze network
-subject = input('Enter subject name: ')
-data = collect_data(cam_cap, mon, calib_points=9, rand_points=4)
-# adjust steps and lr for best results
-# To debug calibration, set show=True
-gaze_network = fine_tune(subject, data, frame_processor, mon, device, gaze_network, k, steps=3000, lr=1e-5, show=False)
-
-#################################
-# Run on live webcam feed and
-# show point of regard on screen
-#################################
-data = frame_processor.process(subject, cam_cap, mon, device, gaze_network, show=True)
+data = frame_processor.process('gang', cam_cap, mon, device, gaze_network, show=True)

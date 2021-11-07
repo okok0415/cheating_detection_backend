@@ -16,13 +16,13 @@ import os
 import torch
 
 sys.path.append("ext/eth")
-from demo.undistorter import Undistorter
-from demo.KalmanFilter1D import Kalman1D
+from few_shot_gaze.demo.undistorter import Undistorter
+from few_shot_gaze.demo.KalmanFilter1D import Kalman1D
 
-from demo.face import face
-from demo.landmarks import landmarks
-from demo.head import PnPHeadPoseEstimator
-from demo.normalization import normalize
+from few_shot_gaze.demo.face import face
+from few_shot_gaze.demo.landmarks import landmarks
+from few_shot_gaze.demo.head import PnPHeadPoseEstimator
+from few_shot_gaze.demo.normalization import normalize
 
 class frame_processer:
 

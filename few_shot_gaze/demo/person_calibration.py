@@ -16,7 +16,7 @@ import os
 
 import torch
 sys.path.append(os.pardir)
-from src.losses import GazeAngularLoss
+from few_shot_gaze.src.losses import GazeAngularLoss
 
 directions = ['l', 'r', 'u', 'd']
 keys = {'u': 0x260000,
