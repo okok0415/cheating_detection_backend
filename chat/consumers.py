@@ -32,6 +32,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         ted_weights = torch.load(ted_parameters_path)
         self.gaze_network = EyeConfig.vanila_gaze_network.to(device)
         self.gaze_network.load_state_dict(ted_weights)
+        print(self.gaze_network)
         self.subject = 'Gang'
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -93,19 +94,20 @@ class ChatConsumer(AsyncWebsocketConsumer):
             try:
                 x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
-            #    if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < self.mon.display_to_cam or y_hat > self.mon.display_to_cam + self.mon.h_pixels:
-                await self.send(
-                    text_data=json.dumps(
-                        {
-                            'peer': peer_username,
-                            'action': action,
-                            'message': message,
-                            'cheating': 'please look monitor',
-                            'x': x_hat,
-                            'y': y_hat,
-                        }
+                print(x_hat, y_hat)
+                if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < 0 or y_hat > self.mon.h_pixels:
+                    await self.send(
+                        text_data=json.dumps(
+                            {
+                                'peer': peer_username,
+                                'action': action,
+                                'message': message,
+                                'cheating': 'please look monitor',
+                                'x': x_hat,
+                                'y': y_hat,
+                            }
+                        )
                     )
-                )
             except:
                 await self.send(
                         text_data=json.dumps(
@@ -259,7 +261,7 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.mon = monitor()
         self.room_group_name = "Test-Room"
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
-        self.cam_calib = pickle.load(open("calib_cam0.pkl", "rb"))
+        self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         self.data = {'image_a': [], 'gaze_a': [], 'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
         self.cnt = 0
@@ -287,7 +289,6 @@ class TrainConsumer(AsyncWebsocketConsumer):
             self.mon.set_monitor(json_data['height'], json_data['width'])
         else:
             self.cnt += 1
-            print(self.cnt)
             msg = json_data['frame']
             if json_data['message'] == 'clicked':
                 g_x = json_data['x']

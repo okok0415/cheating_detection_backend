@@ -26,5 +26,7 @@ def authentication(image, embedding, confidence=0.5):
         target_img = preprocess_face(face_to_recog)
         target = FacenetConfig.model.predict(target_img)[0]
         result = verify(embedding, target)
+    else:
+        result = 'False'
 
     return result

@@ -21,8 +21,12 @@
   <component name="ChangeListManager">
     <list default="true" id="fe4ce774-bd3a-49e6-a80d-dcafba434ed4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/authentication/face_authentication.py" beforeDir="false" afterPath="$PROJECT_DIR$/authentication/face_authentication.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/calib_cam.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/calib_cam.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/consumers.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/frame_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/frame_processor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/new_frame_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/new_frame_processor.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/person_calibration.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/person_calibration.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -74,7 +78,7 @@
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="ts.external.directory.path" value="C:\Program Files\JetBrains\PyCharm 2021.2.2\plugins\JavaScriptLanguage\jsLanguageServicesImpl\external" />
   </component>
-  <component name="RunManager" selected="Python.run_demo">
+  <component name="RunManager" selected="Python.gaze_test">
     <configuration name="calibrate_camera" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
       <module name="cheating_detection_backend" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -88,6 +92,27 @@
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
       <option name="SCRIPT_NAME" value="$PROJECT_DIR$/few_shot_gaze/demo/calibrate_camera.py" />
+      <option name="PARAMETERS" value="" />
+      <option name="SHOW_COMMAND_LINE" value="false" />
+      <option name="EMULATE_TERMINAL" value="false" />
+      <option name="MODULE_MODE" value="false" />
+      <option name="REDIRECT_INPUT" value="false" />
+      <option name="INPUT_FILE" value="" />
+      <method v="2" />
+    </configuration>
+    <configuration name="gaze_test" type="PythonConfigurationType" factoryName="Python" temporary="true" nameIsGenerated="true">
+      <module name="cheating_detection_backend" />
+      <option name="INTERPRETER_OPTIONS" value="" />
+      <option name="PARENT_ENVS" value="true" />
+      <envs>
+        <env name="PYTHONUNBUFFERED" value="1" />
+      </envs>
+      <option name="SDK_HOME" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
+      <option name="ADD_CONTENT_ROOTS" value="true" />
+      <option name="ADD_SOURCE_ROOTS" value="true" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/gaze_test.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -141,6 +166,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.gaze_test" />
         <item itemvalue="Python.run_demo" />
         <item itemvalue="Python.calibrate_camera" />
         <item itemvalue="Python.manage" />
@@ -186,22 +212,22 @@
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
     <state x="932" y="324" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1920.1040@0.0.1920.1040" timestamp="1636165470598" />
-    <state width="1899" height="281" key="GridCell.Tab.0.bottom" timestamp="1636120282399">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom" timestamp="1636264264583">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282399" />
-    <state width="1899" height="281" key="GridCell.Tab.0.center" timestamp="1636120282398">
+    <state width="1899" height="281" key="GridCell.Tab.0.bottom/0.0.1920.1040@0.0.1920.1040" timestamp="1636264264583" />
+    <state width="1899" height="281" key="GridCell.Tab.0.center" timestamp="1636264264583">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
-    <state width="1899" height="281" key="GridCell.Tab.0.left" timestamp="1636120282398">
+    <state width="1899" height="281" key="GridCell.Tab.0.center/0.0.1920.1040@0.0.1920.1040" timestamp="1636264264583" />
+    <state width="1899" height="281" key="GridCell.Tab.0.left" timestamp="1636264264583">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
-    <state width="1899" height="281" key="GridCell.Tab.0.right" timestamp="1636120282398">
+    <state width="1899" height="281" key="GridCell.Tab.0.left/0.0.1920.1040@0.0.1920.1040" timestamp="1636264264583" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right" timestamp="1636264264583">
       <screen x="0" y="0" width="1920" height="1040" />
     </state>
-    <state width="1899" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1636120282398" />
+    <state width="1899" height="281" key="GridCell.Tab.0.right/0.0.1920.1040@0.0.1920.1040" timestamp="1636264264583" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
