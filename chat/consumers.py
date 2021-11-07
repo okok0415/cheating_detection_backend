@@ -102,7 +102,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'peer': peer_username,
                                 'action': action,
                                 'message': message,
-                                'cheating': 'please look monitor',
+                                'cheating': '시선 이탈 알람',
                                 'x': x_hat,
                                 'y': y_hat,
                             }
@@ -115,7 +115,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'peer': peer_username,
                                 'action': action,
                                 'message': message,
-                                'cheating': "can't find you",
+                                'cheating': "얼굴 인식 불가",
                                 'x': 0,
                                 'y': 0,
                             }
