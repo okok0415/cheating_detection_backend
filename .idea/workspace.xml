@@ -21,12 +21,8 @@
   <component name="ChangeListManager">
     <list default="true" id="fe4ce774-bd3a-49e6-a80d-dcafba434ed4" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/authentication/face_authentication.py" beforeDir="false" afterPath="$PROJECT_DIR$/authentication/face_authentication.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/calib_cam.pkl" beforeDir="false" afterPath="$PROJECT_DIR$/calib_cam.pkl" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/chat/consumers.py" beforeDir="false" afterPath="$PROJECT_DIR$/chat/consumers.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/frame_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/frame_processor.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/new_frame_processor.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/new_frame_processor.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/few_shot_gaze/demo/person_calibration.py" beforeDir="false" afterPath="$PROJECT_DIR$/few_shot_gaze/demo/person_calibration.py" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

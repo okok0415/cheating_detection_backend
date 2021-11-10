@@ -26,6 +26,7 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         # 이것도 디비에 저장?
         self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
+        self.head_position_center = pickle.load(open("head_position_center.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
         ted_parameters_path = 'Gang_gaze_network.pth.tar'
@@ -92,9 +93,9 @@ class ChatConsumer(AsyncWebsocketConsumer):
             frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             frame = cv2.resize(frame, dsize=(640, 480))
             try:
-                x_hat, y_hat = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
+                x_hat, y_hat, h_n = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
                                                             por_available=False, show=True, target=None)
-                print(x_hat, y_hat)
+                print(h_n)
                 if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < 0 or y_hat > self.mon.h_pixels:
                     await self.send(
                         text_data=json.dumps(
@@ -105,6 +106,23 @@ class ChatConsumer(AsyncWebsocketConsumer):
                                 'cheating': '시선 이탈 알람',
                                 'x': x_hat,
                                 'y': y_hat,
+                                'yaw': h_n[0],
+                                'pitch': h_n[1]
+                            }
+                        )
+                    )
+                elif not (-15 < h_n[0] - self.head_position_center[0] < 15) or not (-15 < h_n[1] - self.head_position_center[1] < 15):
+                    await self.send(
+                        text_data=json.dumps(
+                            {
+                                'peer': peer_username,
+                                'action': action,
+                                'message': message,
+                                'cheating': '얼굴 이탈 알람',
+                                'x': x_hat,
+                                'y': y_hat,
+                                'yaw': h_n[0],
+                                'pitch': h_n[1]
                             }
                         )
                     )
@@ -268,7 +286,8 @@ class TrainConsumer(AsyncWebsocketConsumer):
         self.gaze_network = EyeConfig.gaze_network.to(device)
         self.subject = 'Gang'
         self.target = (0, 0)
-
+        self.yaw = 0
+        self.pitch = 0
         await self.channel_layer.group_add(self.room_group_name, self.channel_name)
 
         await self.accept()
@@ -307,6 +326,10 @@ class TrainConsumer(AsyncWebsocketConsumer):
                                                                                          device, self.gaze_network,
                                                                                          por_available=True, show=False,
                                                                                          target=self.target)
+
+            if 51 <= self.cnt <= 60:
+                self.yaw += np.degrees(h_n[0])
+                self.pitch += np.degrees(h_n[1])
             self.data['image_a'].append(processed_patch)
             self.data['gaze_a'].append(g_n)
             self.data['head_a'].append(h_n)
@@ -396,11 +419,16 @@ class TrainConsumer(AsyncWebsocketConsumer):
                         await self.send(
                                 text_data=json.dumps(
                                     {
-                                        'message' : message
+                                        'message': message
                                     }
                                 )
                             )
                         print(message)
+
+                head_position_center = (self.yaw / 10, self.pitch / 10)
+                print(head_position_center)
+                pickle.dump(head_position_center, open("head_position_center.pkl", "wb"))
+
                 torch.save(self.gaze_network.state_dict(), '%s_gaze_network.pth.tar' % self.subject)
                 torch.cuda.empty_cache()
 

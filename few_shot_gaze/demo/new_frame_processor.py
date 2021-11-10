@@ -222,7 +222,9 @@ class frame_processer:
                 x_pixel_hat, y_pixel_hat = mon.camera_to_monitor(por_cam_x, por_cam_y)
                 output_tracked = self.kalman_filter_gaze[0].update(x_pixel_hat + 1j * y_pixel_hat)
                 x_pixel_hat, y_pixel_hat = np.ceil(np.real(output_tracked)), np.ceil(np.imag(output_tracked))
-                return x_pixel_hat, y_pixel_hat
+
+
+                return x_pixel_hat, y_pixel_hat, np.degrees(h_n)
 
 
 
