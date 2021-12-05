@@ -26,14 +26,15 @@ class ChatConsumer(AsyncWebsocketConsumer):
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         # 이것도 디비에 저장?
         self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
-        self.head_position_center = pickle.load(open("head_position_center.pkl", "rb"))
+        self.head_position_center = pickle.load(
+            open("head_position_center.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
         # 여기에 디비에 저장된 모델을 갖고와야됨 원래
         ted_parameters_path = 'Gang_gaze_network.pth.tar'
         ted_weights = torch.load(ted_parameters_path)
         self.gaze_network = EyeConfig.vanila_gaze_network.to(device)
         self.gaze_network.load_state_dict(ted_weights)
-        print(self.gaze_network)
+        # print(self.gaze_network)
         self.subject = 'Gang'
         await self.channel_layer.group_add(
             self.room_group_name,
@@ -90,11 +91,12 @@ class ChatConsumer(AsyncWebsocketConsumer):
 
         if action == "get-frame":
             msg = receive_dict['frame']
-            frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            frame = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             frame = cv2.resize(frame, dsize=(640, 480))
             try:
                 x_hat, y_hat, h_n = self.frame_processer.process('Gang', frame, self.mon, device, self.gaze_network,
-                                                            por_available=False, show=True, target=None)
+                                                                 por_available=False, show=True, target=None)
                 print(h_n)
                 if x_hat > self.mon.w_pixels or x_hat < 0 or y_hat < 0 or y_hat > self.mon.h_pixels:
                     await self.send(
@@ -128,17 +130,17 @@ class ChatConsumer(AsyncWebsocketConsumer):
                     )
             except:
                 await self.send(
-                        text_data=json.dumps(
-                            {
-                                'peer': peer_username,
-                                'action': action,
-                                'message': message,
-                                'cheating': "얼굴 인식 불가",
-                                'x': 0,
-                                'y': 0,
-                            }
-                        )
+                    text_data=json.dumps(
+                        {
+                            'peer': peer_username,
+                            'action': action,
+                            'message': message,
+                            'cheating': "얼굴 인식 불가",
+                            'x': 0,
+                            'y': 0,
+                        }
                     )
+                )
 
             return
 
@@ -281,7 +283,8 @@ class TrainConsumer(AsyncWebsocketConsumer):
         # self.cam_calib = {'mtx': np.eye(3), 'dist': np.zeros((1, 5))}
         self.cam_calib = pickle.load(open("calib_cam.pkl", "rb"))
         self.frame_processer = frame_processer(self.cam_calib)
-        self.data = {'image_a': [], 'gaze_a': [], 'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
+        self.data = {'image_a': [], 'gaze_a': [],
+                     'head_a': [], 'R_gaze_a': [], 'R_head_a': []}
         self.cnt = 0
         self.gaze_network = EyeConfig.gaze_network.to(device)
         self.subject = 'Gang'
@@ -315,7 +318,8 @@ class TrainConsumer(AsyncWebsocketConsumer):
                 g_x, g_y, _ = self.mon.monitor_to_camera(g_x, g_y)
                 self.target = (g_x, g_y)
 
-            frame = cv2.imdecode(np.fromstring(base64.b64decode(msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
+            frame = cv2.imdecode(np.fromstring(base64.b64decode(
+                msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
             frame = cv2.resize(frame, dsize=(640, 480))
             '''
             cv2.imshow('points', frame)
@@ -392,7 +396,8 @@ class TrainConsumer(AsyncWebsocketConsumer):
 
                 loss = GazeAngularLoss()
                 optimizer = torch.optim.SGD(
-                    [p for n, p in self.gaze_network.named_parameters() if n.startswith('gaze')],
+                    [p for n, p in self.gaze_network.named_parameters()
+                     if n.startswith('gaze')],
                     lr=lr,
                 )
                 self.gaze_network.eval()
@@ -415,21 +420,24 @@ class TrainConsumer(AsyncWebsocketConsumer):
                         self.gaze_network.eval()
                         output_dict = self.gaze_network(input_dict_valid)
                         valid_loss = loss(input_dict_valid, output_dict).cpu()
-                        message = '%04d> Train: %.2f, Validation: %.2f' % (i + 1, train_loss.item(), valid_loss.item())
+                        message = '%04d> Train: %.2f, Validation: %.2f' % (
+                            i + 1, train_loss.item(), valid_loss.item())
                         await self.send(
-                                text_data=json.dumps(
-                                    {
-                                        'message': message
-                                    }
-                                )
+                            text_data=json.dumps(
+                                {
+                                    'message': message
+                                }
                             )
+                        )
                         print(message)
 
                 head_position_center = (self.yaw / 10, self.pitch / 10)
                 print(head_position_center)
-                pickle.dump(head_position_center, open("head_position_center.pkl", "wb"))
+                pickle.dump(head_position_center, open(
+                    "head_position_center.pkl", "wb"))
 
-                torch.save(self.gaze_network.state_dict(), '%s_gaze_network.pth.tar' % self.subject)
+                torch.save(self.gaze_network.state_dict(),
+                           '%s_gaze_network.pth.tar' % self.subject)
                 torch.cuda.empty_cache()
 
 
@@ -477,7 +485,8 @@ class AuthenticationConsumer(AsyncWebsocketConsumer):
 class CalibrateConsumer(AsyncWebsocketConsumer):
     async def connect(self):
 
-        self.criteria = (cv2.TERM_CRITERIA_EPS + cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
+        self.criteria = (cv2.TERM_CRITERIA_EPS +
+                         cv2.TERM_CRITERIA_MAX_ITER, 30, 0.001)
         self.pts = np.zeros((6 * 9, 3), np.float32)
         self.pts[:, :2] = np.mgrid[0:9, 0:6].T.reshape(-1, 2)
         # capture calibration frames
@@ -503,12 +512,12 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
     async def receive(self, text_data):
         if len(self.frames) == self.num_frame * 4:
             await self.send(text_data=json.dumps({
-            'message': 'stop',
-        }))
+                'message': 'stop',
+            }))
             return
 
         msg = text_data
-        
+
         frame = cv2.imdecode(np.fromstring(base64.b64decode(
             msg.split(',')[1]), np.uint8), cv2.IMREAD_COLOR)
         frame_copy = frame.copy()
@@ -530,8 +539,8 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 self.frames.append(frame)
                 if len(self.frames) % self.num_frame == 0 and len(self.frames) != self.num_frame * 4:
                     await self.send(text_data=json.dumps({
-                            'message': 'change',
-                        }))
+                        'message': 'change',
+                    }))
             if len(self.frames) == self.num_frame * 4:
                 # compute calibration matrices
                 ret, mtx, dist, rvecs, tvecs = cv2.calibrateCamera(self.obj_points, self.img_points,
@@ -540,9 +549,12 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 # check
                 error = 0.0
                 for i in range(len(self.frames)):
-                    proj_imgpoints, _ = cv2.projectPoints(self.obj_points[i], rvecs[i], tvecs[i], mtx, dist)
-                    error += (cv2.norm(self.img_points[i], proj_imgpoints, cv2.NORM_L2) / len(proj_imgpoints))
-                print("Camera calibrated successfully, total re-projection error: %f" % (error / len(self.frames)))
+                    proj_imgpoints, _ = cv2.projectPoints(
+                        self.obj_points[i], rvecs[i], tvecs[i], mtx, dist)
+                    error += (cv2.norm(self.img_points[i], proj_imgpoints,
+                              cv2.NORM_L2) / len(proj_imgpoints))
+                print("Camera calibrated successfully, total re-projection error: %f" %
+                      (error / len(self.frames)))
 
                 self.cam_calib['mtx'] = mtx
                 self.cam_calib['dist'] = dist
@@ -550,7 +562,7 @@ class CalibrateConsumer(AsyncWebsocketConsumer):
                 print(self.cam_calib)
                 pickle.dump(self.cam_calib, open("calib_cam.pkl", "wb"))
                 await self.send(text_data=json.dumps({
-                        'message': 'finish',
-                    }))
+                    'message': 'finish',
+                }))
 
                 return

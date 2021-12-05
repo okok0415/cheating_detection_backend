@@ -26,7 +26,7 @@ SECRET_KEY = "django-insecure-1$tras29q0!5&h*okb8m%2j$dt!o$o8+p4*n^#2gb2_c6cctna
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
@@ -160,8 +160,8 @@ AUTH_USER_MODEL = "users.User"
 MEDIA_ROOT = os.path.join(BASE_DIR, "media")
 MEDIA_URL = "/media/"
 
-CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:3000", "http://localhost:3000"]
-#CORS_ORIGIN_ALLOW_ALL = True
+#CORS_ORIGIN_WHITELIST = ["http://127.0.0.1:3000", "http://localhost:3000" ]
+CORS_ORIGIN_ALLOW_ALL = True
 CORS_ALLOW_CREDENTIALS = True
 
 SESSION_COOKIE_SAMESITE = 'None'
