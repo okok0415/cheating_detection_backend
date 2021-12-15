@@ -6,12 +6,15 @@ from rest_framework.views import APIView
 from rest_framework.response import Response
 from rest_framework.exceptions import AuthenticationFailed
 from rest_framework.permissions import IsAuthenticated
-import jwt, datetime
+import jwt
+import datetime
 from .models import User
 from .serializers import UserSerializer
 
 
 class Register(APIView):
+    """ Register API /user/register"""
+
     def post(self, request):
         serializer = UserSerializer(data=request.data)
         serializer.is_valid(raise_exception=True)
@@ -20,6 +23,8 @@ class Register(APIView):
 
 
 class LoginView(APIView):
+    """ Login API /user/login"""
+
     def post(self, request):
         username = request.data["username"]
         password = request.data["password"]
@@ -48,6 +53,8 @@ class LoginView(APIView):
 
 
 class UserView(APIView):
+    """ User API /user/user"""
+
     def get(self, request):
         token = request.COOKIES.get("jwt")
 
@@ -65,6 +72,8 @@ class UserView(APIView):
 
 
 class LogoutView(APIView):
+    """ Logout API /user/logout"""
+
     def post(self, request):
         response = Response()
         response.delete_cookie("jwt")
@@ -74,17 +83,23 @@ class LogoutView(APIView):
 
 
 class UpdateView(APIView):
+    """ Update API /user/update"""
+
     def post(self, request):
         username = request.data["username"]
         user = User.objects.get(username=username)
-        
+
         serializer = UserSerializer(instance=user, data=request.data)
         if serializer.is_valid():
             serializer.save()
         return Response(serializer.data)
 
+
 class UpdateNameView(APIView):
+    """ Update Name API /user/updatename"""
+
     def post(self, request):
         username = request.data["username"]
-        User.objects.filter(username = username).update(name= request.data["name"], birth= request.data['birth'])
-        return Response({"message" : "ok"})
+        User.objects.filter(username=username).update(
+            name=request.data["name"], birth=request.data['birth'])
+        return Response({"message": "ok"})
